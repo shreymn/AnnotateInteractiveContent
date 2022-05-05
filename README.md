@@ -1,2 +1,6 @@
 # AnnotateInteractiveContent
-The purpose of this exercise is to write an efficient algorithm that decides whether to show or hide an annotation as interactive content plays. An annotation may be a highlighted area, a text overlay, or a prompt to the user to take an action.
+The approach was simple considering the time constraints. The current version may not be scalable. 
+- On every time update, the logic retrieves and formats the time based on hours:minutes:seconds.
+- This currentTime is passed into the handleAnnotations function.
+- The HandleAnnotations function loops through each track and each annotation within the track
+- Based on the currenttime, starttime and end time of the annotation, the show/ hide function is invoked.
