@@ -1,30 +1,33 @@
 player.on('timeUpdate', function(event) {
 	// currentTime (seconds, float) is exposed as event.data.currentTime
 	var currentTime = event.data.currentTime;
+	var time = convertTimeStamp(currentTime);
 	// your algorithm will be called here with the currentTime as the argument
-	var minutes = Math.floor(currentTime / 60);
-    var seconds = Math.floor(currentTime - minutes * 60);
-	const minuteValue = minutes.toString().padStart(2, '0');
-    const secondValue = seconds.toString().padStart(2, '0');
-
-    const mediaTime = `${minuteValue}:${secondValue}`;
+	handleAnnotations(time);
 });
 
-function handleSubtitles(currentTime) {
-  // If there is an active subtitle and it should be hidden
-  if (activeSubtitle !== null && (currentTime >= subtitles[activeSubtitle].end || currentTime < subtitles[activeSubtitle].start)) {
-    subtitleDisplay.innerText = ''; // Hide subtitle
-    activeSubtitle = null;
-  }
+function handleAnnotations(currentTime) {  
+	for (var i = 0; i < tracks.length; i++) {
+		for (var j = 0; j < tracks[i].length; j++) {
+			var currentAnnotationStartTime = convertTimeStamp(tracks[i][j].startTime);
+			var currentAnnotationEndTime = convertTimeStamp(tracks[i][j].endTime);
+			if (currentTime >= currentAnnotationStartTime && currentTime < currentAnnotationEndTime) {
+				tracks[i][j].show;
+			} else {
+				tracks[i][j].hide;
+			}
+		}
+	}
+}
 
-  // If there is no active subtitle
-  if (activeSubtitle === null) {
-    for (var i = 0; i < subtitleCount; i++) {
-      if (currentTime >= subtitles[i].start && currentTime < subtitles[i].end) {
-        subtitleDisplay.innerText = subtitles[i].text; // Show subtitle
-        activeSubtitle = i;
-        break;
-      }
-    }
-  }
+function convertTimeStamp(time) {
+	var hours = Math.floor(time / 60 / 60);
+	var minutes = Math.floor(time / 60);
+    var seconds = Math.floor(time - minutes * 60);
+	var hourValue = hours.toString().padStart(2, '0');
+	var minuteValue = minutes.toString().padStart(2, '0');
+    var secondValue = seconds.toString().padStart(2, '0');
+
+    var mediaTime = `${hourValue}:${minuteValue}:${secondValue}`;
+	return mediaTime;
 }
